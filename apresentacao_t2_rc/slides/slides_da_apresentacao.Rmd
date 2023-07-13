@@ -1,0 +1,726 @@
+---
+title: "Teste T-quadrado de Hotteling e Região de Confiança"
+subtitle: ""
+author: "Beatriz Lima e Vitória Sesana"
+institute: "Vitória, UFES"
+date: "Julho de 2023"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+## DATA
+data("iris")
+force(iris)
+iris <- iris[,-5]
+```
+
+```{r bibliotecas, include=FALSE}
+library(dplyr)
+library(jocre)
+library(MVQuickGraphs)
+```
+
+class: inverse, center, middle
+
+# Teste de T-Quadrado de Hotelling
+
+
+---
+
+
+# Teste de T-Quadrado de Hotelling
+
+-	Foi desenvolvido por Harold Hotteling, um estatístico e influente teórico econômico;
+
+--
+
+- É uma alternativa multivariada para o teste T de Student;
+
+--
+
+- Esse teste é utilizado em duas situações:
+
+--
+
+.pull-left[
+- **Uma amostra (One Sample) **: Verifica se um determinado vetor de médias tem valores plausiveis para a média da população de uma amostra multivariada. Possui a seguintes hipóteses:
+
+$$H_0: \mu = \mu_0$$
+$$H_1: \mu \neq \mu_0$$
+
+]
+
+.pull-right[
+- **Duas amostras (Two Samples)**: Verifica se um determinado vetor tema valores plausiveis para a diferença de médias entre observações multivariadas de duas amostras. Possui a seguintes hipóteses:
+
+$$H_0: \mu_1 = \mu_2$$
+  
+$$H_1: \mu_1 \neq \mu_2$$
+
+]
+
+
+---
+
+# T-student e T-Quadrado de Hotelling
+
+No contexto de análise univariada, para descobrir se um determinado valor $\mu_0$ é um valor plausivel para a média de uma populaçao $\mu$, cria-se o seguinte teste de hipótese:
+
+$$H_0: \mu = \mu_0$$
+
+$$H_1: \mu \neq \mu_0$$
+
+--
+
+
+Sendo $X_1, X_2, ..., X_n$ uma amostra aleatória de uma variável normal, o teste estatistico é:
+
+$$t = \frac{(\overline{X} - \mu_0)}{s/\sqrt{n}}$$
+
+--
+
+$$ \overline{X} = \frac{1}{n} \sum_{j=1}^{n} X_j$$
+
+--
+
+$$s^2 = \frac{1}{n-1} \sum_{j=1}^{n} (X_j - \overline{X})^2 $$
+
+---
+
+#T-student e T-Quadrado de Hotelling
+
+Considerando em parametros multivariados, é preciso determinar se um dado vetor p x 1 $\mu_0$ é um valor palusivel para o vetor de médias de uma distribuição normal multivariada. A generalização da tstudent para seu analógo multivariado é:
+
+$$T^2 =
+(\overline{X} - \mu_0)´ (\frac{1}{n}S)^{-1} (\overline{X} - \mu_0) = n (\overline{X} - \mu_0)´ S^{-1} (\overline{X}-\mu_0)$$
+
+$$\overline{X}_{p\times1} = \frac{1}{n} \sum_{j=1}^{n} X_j$$
+
+$$S_{p \times p} =\frac{1}{n-1} \sum_{j=1}^{n} (X_j - \overline{X})(X_j - \overline{X})´$$
+
+$$\begin{equation}
+\mu_{0_{1\times p}} =  
+  \begin{bmatrix}
+\mu_{10} \\
+\vdots \\
+\mu_{p0}
+\end{bmatrix}
+\end{equation}$$
+
+---
+
+# Distribuição de Fisher e do T-Quadrado de Hotelling
+
+Se o valor $T^2$ observado é muito grande, então $\overline{x}$ é está muito "afastado" de $\mu_0$ e a hipótese nula é rejeitada. Visto que $T^2$ é distribuida como $\frac{(n-1)p}{(n-p)} F_{p,n-p}$.
+Sendo $F_{p,n-p}$ uma variável aleatória com distribuição F com p e n-p graus de liberdade. Rejeita-se $H_0$ para nivel de significancia de $\alpha$ se
+
+$$T^2 = n (\overline{X} - \mu_0)´ S^{-1} (\overline{X}-\mu_0) > \frac{(n-1)p}{(n-p)} F_{p,n-p}(\alpha)$$
+
+---
+
+#Banco de Dados
+
+```{r data}
+knitr::kable(summary(iris), format = 'html')
+```
+
+---
+
+#Exemplo no R: Teste T-student
+
+```{r}
+t.test(iris$Sepal.Length, mu= 6)
+```
+
+---
+
+#Exemplo no R: Teste T-student
+```{r}
+t.test(iris$Sepal.Width, mu= 3)
+```
+
+---
+
+#Exemplo no R: Teste T-student
+```{r}
+t.test(iris$Petal.Length, mu = 4)
+```
+
+---
+
+#Exemplo no R: Teste T-student
+
+```{r}
+t.test(iris$Petal.Width, mu = 1)
+```
+
+---
+
+#Exemplo no R: Teste T-quadrado de Hotteling
+
+```{r comment='#'}
+n <- nrow(iris)
+p <- ncol(iris)
+
+vetor_medias <- colMeans(iris)
+matriz_cov <- cov(iris)
+matriz_inv_cov <- solve(matriz_cov)
+
+medias_0 <- c(5,3,4,1)
+
+T_2 <- n*t(vetor_medias - medias_0)%*%
+        matriz_inv_cov%*%
+        (vetor_medias - medias_0)
+
+alpha <- 0.01
+valorF <- qf(p = alpha,df1 = p,df2 = n-p, lower.tail = FALSE)
+
+VC <- (((n-1)*p)/(n-p))*valorF
+```
+
+---
+
+#Resultados
+
+Vetor de médias:
+
+```{r, echo=FALSE}
+tabela_vetor_medias <- as.matrix(vetor_medias)
+colnames(tabela_vetor_medias) <- c("Médias")
+knitr::kable(t(tabela_vetor_medias))
+```
+
+Matriz de Covariância:
+
+```{r, echo=FALSE}
+knitr::kable(matriz_cov)
+```
+
+---
+
+#Resultados
+
+Matriz Inversa da Covariância:
+
+```{r, echo=FALSE}
+knitr::kable(matriz_inv_cov)
+```
+
+Testando o vetor de médias $\mu_0 = [5,3,4,1]$. Dado n = 150 e p = 4, o valor critico de F para o teste é 3.45 e o $T^2$ é igual a 2160.86. Assim, rejeita-se $H_0$ com nível de significancia de 1%.
+
+---
+
+#Exemplo no R: Uma Amostra
+
+```{r, echo =TRUE}
+library(DescTools)
+
+HotellingsT2Test(iris, mu = medias_0, test = "chi")
+```
+
+---
+
+#Exemplo no R: Duas amostras
+
+```{r, echo=FALSE, include=FALSE}
+data("iris")
+force(iris)
+```
+Selecionando as observações da especies Setosa e Versicolor
+
+```{r, echo=TRUE}
+setosa <- iris[iris$Species == "setosa",]
+setosa <- setosa[,-5]
+knitr::kable(summary(setosa), format = 'html')
+```
+
+---
+
+#Exemplo no R: Duas amostras
+
+Selecionando as observações da especies Setosa e Versicolor
+
+```{r, echo=TRUE}
+versicolor <- iris[iris$Species == "versicolor",]
+versicolor <- versicolor[,-5]
+knitr::kable(summary(versicolor), format = 'html')
+```
+
+---
+
+#Exemplo no R: Duas amostras
+
+Testando o vetor $\mu = [0.9,-0.65,2.8,1]$ para diferença de médias.
+
+```{r}
+mu <- c(0.9, -0.65, 2.8, 1)
+
+HotellingsT2Test(x=versicolor,y=setosa, mu=mu, test = "chi")
+```
+
+---
+
+class: inverse, center, middle
+
+# Região de Confiança para a Média
+
+---
+## Intervalo de Confiança 
+
+- Caso univariado de tamanho $n$;
+- Para $\mu$ e $\sigma$ desconhecidos: teste t-student.
+
+
+$$P \Bigg[ \Bigg| \frac{\bar{X}- \mu}{ S / \sqrt{n}} \Bigg| \leq t_{n-1} (\alpha) \Bigg] = 1 - \alpha$$
+
+$$P \Bigg[ \bar{X} - t_{n-1} (\alpha) \frac{S}{ \sqrt{n}}< \mu < \bar{X} - t_{n-1} (\alpha) \frac{S}{ \sqrt{n}} \Bigg] = 1 - \alpha$$
+
+Portanto, o intervalo para $\mu$ com 100(1- $\alpha$)% de confiança é:
+
+$$IC = \bigg[ \bar{X} - t_{n-1} (\alpha) \frac{S}{ \sqrt{n}}; \bar{X} + t_{n-1} (\alpha) \frac{S}{ \sqrt{n}} \bigg]$$
+- Com $\bar{X}$ sendo a média amostral e $S^{2}$ a variância amostral.
+
+---
+
+## Região de Confiança 
+
+- Caso Multivariado de tamanho $n$ e com $p$ variáveis;
+- Teste de Hotteling.
+
+$$P\bigg[ R(X) \text{ cobrir o real valor de } \underset{\sim}{\mu} \bigg] = 1 - \alpha$$
+
+$$P\bigg[n (\bar{X}-\mu)'S^{-1}(\bar{X}-\mu) \leq \frac{(n-1)p}{(n-p)}F_{p, n-p}(\alpha)\bigg] = 1 - \alpha$$
+--
+
+Como construir a região de confiança $R(X)$ com 100(1- $\alpha$)% de confiança? 
+
+--
+
+Calculando os eixos e seus tamanhos relativos de uma elipsoide (centrada em $\bar{X}$) a partir dos autovalores e autovetores da matriz de covariância $S$! 
+
+$$S e_{i} = \lambda_{i} e_{i}$$
+- Com $\lambda_{i}$ sendo os autovalores e $e_{i}$ os autovetores.
+
+---
+
+## Construindo a Região de Confiança
+
+- Direção e metade dos tamanhos dos eixos do elipsoide de confiança:
+
+$$\sqrt{\lambda_{i}} \sqrt{ \frac{p(n-1)}{n(n-p)}F_{p,n-p}(\alpha)} e_i$$
+--
+
+- Vértices da elipsoide de confiança:
+
+$$ \bar{X} \pm \sqrt{\lambda i} \sqrt{ \frac{p(n-1)}{n(n-p)}F_{p,n-p}(\alpha)} e_i$$
+--
+
+- Indicador de alogamento da elipsoide de confiança:
+
+$$\frac{n\sqrt{\lambda_{max}} \sqrt{\frac{p(n-1)}{n(n-p)}F_{p, n-p}(\alpha)}}{n\sqrt{\lambda_{min}} \sqrt{\frac{p(n-1)}{n(n-p)}F_{p, n-p}(\alpha)}} = \frac{\sqrt{\lambda_{max}}}{\sqrt{\lambda_{min}}}$$
+
+---
+
+## Região de Confiança Simultânea 
+
+- Outro método para obter uma região de confiança;
+
+- Para p variáveis indepedentes, considera-se um intervalo de confiança para cada variável.
+
+- Intervalos simultâneos ou intervalos $T^2$.
+
+$$IC_{i} = \bigg[ \bar{x}_{i} - \sqrt{ \frac{p(n-1)}{(n-p)}F_{p,n-p}(\alpha)} \sqrt{\frac{s_{ii}}{ n}}; 
+\bar{x}_{i} + \sqrt{ \frac{p(n-1)}{(n-p)}F_{p,n-p}(\alpha)} \sqrt{\frac{s_{ii}}{ n}};
+\bigg]$$
+
+A Região de Confiança será a região que atende aos intervalos de cada variável simultâneamente!
+
+--
+
+O nível de confiança para cada intervalo será de $100(1-\alpha)$%, mas simultaneamente será $100(1-\alpha)^{p}$.
+
+Isso ocorre já que há $p$ intervalos de confiança individuais.
+
+$$P\bigg[\text{ Todos os IC's cobrirem o real valor de } \underset{\sim}{\mu} \bigg] = (1 - \alpha) \dots (1 - \alpha) = (1 - \alpha)^p$$
+
+---
+
+## Região de Confiança Simultânea (Método Bonferroni)
+
+- Intervalos simultâneos mais precisos (menores) que os intervalos $T^{2}$.
+
+- Desigualdade Bonferroni 
+
+$$P[\text{ Todos os IC's cobrirem o real valor de } \underset{\sim}{\mu} ] = 1 - P[\text{Pelo menos um IC é falso} ]$$
+
+$$P[\text{ Todos os IC's serem verdadeiros} ] = 1 - \sum_{i=n}^{m} P[\text{IC}_{i} \text{ ser falso}]$$
+
+$$P[\text{ Todos os IC's serem verdadeiros}] = 1 - \sum_{i=n}^{m} (1- P[\text{IC}_{i} \text{ ser verdadeiro}])$$
+
+$$P[\text{Todos os IC's serem verdadeiros} ] = 1 - (\alpha_{1} +\cdots + \alpha_{m})$$
+---
+
+## Região de Confiança Simultânea (Método Bonferroni)
+
+Desse modo, $\alpha_{i} = \alpha/m$
+$$P \bigg[ \bar{x}_{i} \pm t_{n-1}\bigg(\frac{\alpha}{2m}\bigg) \sqrt{\frac{s_{ii}}{ n}} \bigg]= 1- \alpha/m$$
+Os intervalos de confiança individuais utilizando o método bonferroni são:
+
+$$IC_{i} = \bigg[ \bar{x}_{i} - t_{n-1}\bigg(\frac{\alpha}{2m}\bigg) \sqrt{\frac{s_{ii}}{ n}}; 
+\bar{x}_{i} + t_{n-1}\bigg(\frac{\alpha}{2m}\bigg) \sqrt{\frac{s_{ii}}{ n}}
+\bigg]$$
+
+---
+
+## Exemplo no R 
+
+- Base 'iris', colunas: 'Sepal.Length' e 'Sepal.Width';
+
+```{r}
+base_bivariada <- iris %>% 
+  select(Sepal.Length, Sepal.Width)
+
+n <- nrow(base_bivariada)
+p <- ncol(base_bivariada)
+
+vetor_medias <- colMeans(base_bivariada)
+matriz_cov <- cov(base_bivariada)
+matriz_inv_cov <- solve(matriz_cov)
+
+alpha <- 0.01
+valorF <- qf(1-alpha, p, n - p)
+
+autovalores <- eigen(matriz_cov)$values
+autovetores <- eigen(matriz_cov)$vectors 
+```
+
+---
+
+## Resultados
+
+Vetor Médias:
+
+```{r, echo=FALSE}
+tabela_vetor_medias <- as.matrix(vetor_medias)
+colnames(tabela_vetor_medias) <- c("Médias")
+knitr::kable(t(tabela_vetor_medias))
+```
+
+Matriz de Variâncias e Covariâncias:
+
+```{r, echo=FALSE}
+knitr::kable(matriz_cov)
+```
+
+---
+
+## Resultados
+
+Autovalores:
+
+```{r, echo=FALSE}
+tabela_autovalores <- as.matrix(autovalores)
+rownames(tabela_autovalores) <- c("Autovalor 1", "Autovalor 2")
+knitr::kable(t(tabela_autovalores))
+```
+
+Autovetores:
+
+```{r, echo=FALSE}
+tabela_autovetores<- as.matrix(autovetores)
+colnames(tabela_autovetores) <- c("Autovetor 1", "Autovetor 2")
+knitr::kable(tabela_autovetores)
+```
+
+Dado n = `r n`, p = `r p` o valor crítico de F para o teste de hotteling é `r round(valorF, 2)` com 1% de nível de significância.
+
+---
+
+## Calculando os eixos da elipse e seus tamanhos
+
+```{r}
+eixos_tamanhos <- c()
+eixos <- c()
+
+for (i in 1:p) {
+  tamanho <- sqrt(autovalores[i]) * 
+    sqrt( ( p * (n - 1) / (n * (n - p)) ) * 
+            valorF) 
+  
+  eixos_valores <- tamanho * autovetores[,i]
+  eixos_tamanhos <- cbind(eixos_tamanhos, tamanho)
+  eixos <- cbind(eixos, eixos_valores)
+}
+```
+
+
+.pull-left[
+
+Metade dos tamanhos dos eixos:
+
+```{r, echo=FALSE}
+tabela_eixos_tamanhos <- as.matrix(eixos_tamanhos)
+colnames(tabela_eixos_tamanhos) <- c("Tamanho 1","Tamanho 2")
+knitr::kable(tabela_eixos_tamanhos)
+```
+]
+
+
+.pull-right[
+
+Eixos:
+
+```{r, echo=FALSE}
+tabela_eixos <- as.matrix(eixos)
+colnames(tabela_eixos) <- c("Eixo 1","Eixo 2")
+knitr::kable(tabela_eixos)
+```
+
+]
+
+---
+
+## Calculando os vértices da elipse 
+
+```{r}
+vertices <- c()
+
+for (i in 1:p) {
+  vertice_inf <- vetor_medias - eixos[,i]
+  vertice_sup <- vetor_medias + eixos[,i]
+  vertices <- rbind(vertices, vertice_inf, vertice_sup)
+}
+
+colnames(vertices) <- colnames(base_bivariada)
+```
+
+Vértices da elipse:
+
+```{r, echo=FALSE}
+tabela_vertices <- as.matrix(vertices)
+rownames(tabela_vertices) <- c(1:4)
+knitr::kable(tabela_vertices)
+```
+
+---
+
+## Indicador de Achatamento da Região de Confiança 
+
+Razão entre os tamanhos dos eixos
+
+```{r}
+razao_tamanho_eixos <- 
+  sqrt(max(autovalores)) / sqrt(min(autovalores))
+```
+
+O tamanho do maior eixo é `r round(razao_tamanho_eixos,1)` vezes o tamanho do menor eixo.
+
+
+---
+
+## Plotando a Região de Confiança (Código)
+
+```{r Código Gráfico RG , eval = FALSE, fig.align='center'}
+library(MVQuickGraphs)
+
+confidenceEllipse(X.mean = vetor_medias,
+                  eig = eigen(matriz_cov),
+                  n = n, 
+                  p = p,
+                  alpha = alpha, 
+                  xl = c(min(base_bivariada$Sepal.Length),
+                         max(base_bivariada$Sepal.Length)),
+                  yl = c(min(base_bivariada$Sepal.Width),
+                         max(base_bivariada$Sepal.Width)))
+
+points(base_bivariada,
+       pch = 20, col = "gray")
+
+points(vetor_medias[1], 
+       vetor_medias[2],
+       pch = 18, col = "red")
+
+points(vertices[,1], 
+       vertices[,2], 
+       pch = 18, col = "blue")
+```
+
+---
+
+## Plotando a Região de Confiança  (GRÁFICO)
+
+```{r Gráfico RG, echo=FALSE, fig.align='center', fig.width=10}
+
+confidenceEllipse(X.mean = vetor_medias,
+                  eig = eigen(matriz_cov),
+                  n = n, 
+                  p = p,
+                  alpha = alpha, 
+                  xl = c(min(base_bivariada$Sepal.Length),
+                         max(base_bivariada$Sepal.Length)),
+                  yl = c(min(base_bivariada$Sepal.Width),
+                         max(base_bivariada$Sepal.Width)))
+title("Região de Confiança Bivariado com 99% de Confiança",
+      xlab = "Sepal Lenght",
+      ylab = "Sepal Width")
+points(base_bivariada,
+       pch = 20, col = "gray")
+
+points(vetor_medias[1], 
+       vetor_medias[2],
+       pch = 18, col = "red")
+
+points(vertices[,1], 
+       vertices[,2], 
+       pch = 18, col = "blue")
+```
+
+---
+
+## Plotando a Região de Confiança (GRÁFICO AMPLIADO)
+
+```{r Gráfico RG 2, echo=FALSE, fig.align='center', fig.width=10}
+
+confidenceEllipse(X.mean = vetor_medias,
+                  eig = eigen(matriz_cov),
+                  n = n, 
+                  p = p,
+                  alpha = alpha)
+# xlab("Sepal.Length")
+# ylab("Sepal.Width")
+# graphics::
+title("Região de Confiança Bivariado com 99% de Confiança",
+      xlab = "Sepal Lenght",
+      ylab = "Sepal Width")
+points(base_bivariada,
+       pch = 19, col = "gray")
+
+points(vetor_medias[1], 
+       vetor_medias[2],
+       pch = 19, col = "red")
+
+points(vertices[,1], 
+       vertices[,2], 
+       pch = 19, col = "blue")
+```
+
+---
+
+## Calculando Intervalos Simultâneos (Teste de Hotteling)
+
+```{r}
+intervalos <- c()
+for (i in 1:p) {
+  estatistica <- 
+    sqrt( ((p * (n-1)) / (n-p)) * valorF) * 
+    sqrt(matriz_cov[i,i]/n)
+  lim_inf <- vetor_medias[i]-estatistica
+  lim_sup <- vetor_medias[i]+estatistica
+  limites <- c(lim_inf,lim_sup )
+  intervalos <- rbind(intervalos,limites)
+}
+
+rownames(intervalos) <- rownames(matriz_cov)
+colnames(intervalos) <- c("Limite Inferior", 
+                          "Limite Superior")
+```
+
+```{r, echo=FALSE}
+knitr::kable(intervalos)
+```
+
+---
+
+## Calculando Intervalos Simultâneos (Bonferroni)
+
+```{r}
+m <- p
+valorT <- qt(1 - (alpha/(2*m)), df = n-1)
+
+intervalos_bonferroni <- c()
+for (i in 1:p) {
+  estatistica <- valorT * sqrt(matriz_cov[i,i]/n)
+  lim_inf <- vetor_medias[i] - estatistica
+  lim_sup <- vetor_medias[i] + estatistica
+  limites <- c(lim_inf, lim_sup)
+  intervalos_bonferroni <- rbind(intervalos_bonferroni,limites)
+}
+
+rownames(intervalos_bonferroni) <- rownames(matriz_cov)
+colnames(intervalos_bonferroni) <- c("Limite Inferior", 
+                                     "Limite Superior")
+```
+
+```{r, echo=FALSE}
+knitr::kable(intervalos_bonferroni)
+```
+
+---
+
+## Plotando os Intervalos Simultâneos (Códigos)
+
+```{r, eval=FALSE}
+confidenceEllipse(X.mean = vetor_medias,
+                  eig = eigen(matriz_cov),
+                  n = n, 
+                  p = p,
+                  alpha = alpha)
+title("Intervalos de Confiança Simultâneos com 99% de Confiança",
+      xlab = "Sepal Lenght",
+      ylab = "Sepal Width")
+
+abline(v = intervalos[1,], 
+       h = intervalos[2,], 
+       lwd=1, lty=3, col = "blue")
+
+abline(v = intervalos_bonferroni[1,], 
+       h = intervalos_bonferroni[2,], 
+       lwd=1, lty=3, col = "red")
+
+legend("bottomright", 
+       legend = c("Teste de Hotteling", "Bonferroni"),
+       lwd = c(1,1), lty=3, col = c("blue", "red"))
+```
+
+---
+
+## Plotando os Intervalos Simultâneos (Graficamente)
+
+- Com `r 100*(1 - alpha)^p`% de confiança para $\alpha = 1$%.
+
+```{r, echo=FALSE, fig.align='center', fig.width=10}
+confidenceEllipse(X.mean = vetor_medias,
+                  eig = eigen(matriz_cov),
+                  n = n, 
+                  p = p,
+                  alpha = alpha)
+title("Intervalos de Confiança Simultâneos Bivariados",
+      xlab = "Sepal Lenght",
+      ylab = "Sepal Width")
+
+abline(v = intervalos[1,], 
+       h = intervalos[2,], 
+       lwd=1, lty=3, col = "blue")
+
+abline(v = intervalos_bonferroni[1,], 
+       h = intervalos_bonferroni[2,], 
+       lwd=1, lty=3, col = "red")
+
+legend("bottomright", 
+       legend = c("Teste de Hotteling", "Bonferroni"),
+       lwd = c(1,1), lty=3, col = c("blue", "red"))
+
+```
+
+---
+
+class: center, middle
+
+# Agradecemos pela atenção!

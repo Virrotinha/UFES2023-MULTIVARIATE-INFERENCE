@@ -1,0 +1,40 @@
+# AMBOS SÃO UTILIZADOS PARA REALIZAR INFERÊNCIA SOBRE A MÉDIA
+# INTERVALO DE CONFIANÇA É UNIVARIADO, OU SEJA, QUANDO SOMENTE UMA 
+# ÚNICA CARACTERISTICA DA POPULAÇÃO É ANALISADO
+# REGIÃO DE CONFIANÇA É QUANDO HÁ 2 OU MAIS CARACTERISTICAS DE INTERESSE DA POPULAÇÃO
+# o objetivo de obter este intervalo ou região é para obter os possíveis
+# valores da média que não reijeita a hipótese nula do teste
+
+# univariado: reta (intervalo)
+# bivariado: área (regiao)
+# trivariado: volume (regiao)
+
+# todos eles sendo elpsoides (para as regioes p>2)
+
+
+# "O eixo maior é XX vezes0 maior que o eixo menor."
+
+# todos os valores que não rejeitariam a hipotese nula do teste
+# ou seja, valores plausível para 
+# https://www.youtube.com/watch?v=pnAIJPTy_QM
+
+---
+
+## Inferências de grandes amostras para o vetor média populacional
+
+- Para $n -p \rightarrow \infty$:
+
+$$n (\bar{X}-\mu)'S^{-1}(\bar{X}-\mu) \sim X_{p}^{2} $$
+
+$$P\bigg[n (\bar{X}-\mu)'S^{-1}(\bar{X}-\mu) \leq  X_{p}^{2}(\alpha)\bigg] = 1 - \alpha$$
+
+
+## Objetivos
+
+Ter conclusões sobre uma caracteristíca da população
+
+Ter conclusões sobre varias caracteristícas de uma população
+
+Região de Confiança nada mais é que todos os vetores possíveis onde, quando aplicado ao teste de hotelling, não rejeita a hipótese nula.
+
+Ou seja, contém os possíveis vetores de serem a média populacional para um determinado nível de significância.

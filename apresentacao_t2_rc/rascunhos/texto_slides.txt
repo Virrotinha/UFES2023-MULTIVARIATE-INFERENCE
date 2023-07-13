@@ -1,0 +1,190 @@
+---
+title: "Teste de Hotteling e Intervalo de Confiança"
+subtitle: ""
+author: "Beatriz Lima e Vitória Sesana"
+institute: "Vitória, UFES"
+date: "Julho de 2023"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+class: inverse, center, middle
+
+# Teste de Hotteling
+
+
+---
+class: inverse, center, middle
+
+# Região de Confiança para a Média
+
+
+---
+class: center, middle
+
+# Intervalo de Confiança 
+# x 
+# Região de Confiança
+
+```{r include=FALSE}
+# AMBOS SÃO UTILIZADOS PARA REALIZAR INFERÊNCIA SOBRE A MÉDIA
+# INTERVALO DE CONFIANÇA É UNIVARIADO, OU SEJA, QUANDO SOMENTE UMA 
+# ÚNICA CARACTERISTICA DA POPULAÇÃO É ANALISADO
+# REGIÃO DE CONFIANÇA É QUANDO HÁ 2 OU MAIS CARACTERISTICAS DE INTERESSE DA POPULAÇÃO
+# o objetivo de obter este intervalo ou região é para obter os possíveis
+# valores da média que não reijeita a hipótese nula do teste
+
+# univariado: reta (intervalo)
+# bivariado: área (regiao)
+# trivariado: volume (regiao)
+
+# todos eles sendo elpsoides (para as regioes p>2)
+```
+---
+# Intervalo de Confiança 
+
+- Univariado
+- Para $\mu$ e $\sigma$ desconhecidos
+- teste t-student 
+
+$$P \Bigg[ \Bigg| \frac{\bar{X}- \mu}{ S / \sqrt{n}} \Bigg| \leq t_{n-1} (\alpha) \Bigg] = 1 - \alpha$$
+
+$$P \Bigg[ \bar{X} - t_{n-1} (\alpha) \frac{S}{ \sqrt{n}}< \mu < \bar{X} - t_{n-1} (\alpha) \frac{S}{ \sqrt{n}} \Bigg] = 1 - \alpha$$
+
+$$IC = \bigg[ \bar{X} - t_{n-1} (\alpha) \frac{S}{ \sqrt{n}}; \bar{X} - t_{n-1} (\alpha) \frac{S}{ \sqrt{n}} \bigg]$$
+
+
+---
+# Intervalo de Confiança x Região de Confiança
+
+Ter conclusões sobre uma caracteristíca da população
+
+Ter conclusões sobre varias caracteristícas de uma população
+
+Região de Confiança nada mais é que todos os vetores possíveis onde, quando aplicado ao teste de hotelling, não rejeita a hipótese nula.
+
+Ou seja, contém os possíveis vetores de serem a média populacional para um determinado nível de significância.
+
+---
+
+# Região de Confiança 
+
+$$P\bigg[ R(X) \text{ cobrir o real valor de } \underset{\sim}{\mu} \bigg] = 1 - \alpha$$
+
+$$P\bigg[n (\bar{X}-\mu)'S^{-1}(\bar{X}-\mu) \leq \frac{(n-1)p}{(n-p)}F_{p, n-p}(\alpha)\bigg] = 1 - \alpha$$
+
+- VIDEO
+
+```{r include=FALSE}
+# todos os valores que não rejeitariam a hipotese nula do teste
+# ou seja, valores plausível para 
+# https://www.youtube.com/watch?v=pnAIJPTy_QM
+```
+
+<!-- \begin{align*} -->
+<!-- $$P[n (\bar{X}-\mu)]$$ -->
+<!-- \en{align*} -->
+---
+
+# Como construir a região de confiança?
+
+- A região será um elipsóide centrado no vetor de médias amostrais $\bar{X}$; 
+- Para $ p 4$ não tem há como construir graficamente, mas dá para calcular os eixos e seus tamanhos relativos.
+- O elipsóide possui $100(1-\alpha)$  a % de confiança de conter o verdadeiro valor de $\mu$
+
+- Vértices, os tamnahos dos eixos
+
+- Autovalores e autovetores da matriz de covariância
+
+$$ Se_{i} = \lambda_{i} e_{i} i = \{ 1,\dots , p \} $$
+
+--- 
+
+# Como construir a região de confiança?
+
+- Direção e metade do tamanho dos eixos:
+
+$$\sqrt{\lambda_{i}} \sqrt{\frac{p(n-1)}{n(n-p)}F_{p, n-p}(\alpha)}$$
+- Eixos 
+
+$$ \sqrt{\lambda_{i}} \sqrt{\frac{p(n-1)}{n(n-p)}F_{p, n-p}(\alpha)} e_{i}$$
+
+---
+- Pontos dos vértices da elipsóide 
+
+$$ \bar{X} \pm \sqrt{\lambda_{i}} \sqrt{\frac{p(n-1)}{n(n-p)}F_{p, n-p}(\alpha)} e_{i} $$
+
+
+---
+
+# Como construir a região de confiança?
+
+- Indicador de alogamento da região de confiança.
+
+- Razão entre o tamanho do maior e menor eixo;
+
+$$\frac{n\sqrt{\lambda_{max}} \sqrt{\frac{p(n-1)}{n(n-p)}F_{p, n-p}(\alpha)}}{n\sqrt{\lambda_{min}} \sqrt{\frac{p(n-1)}{n(n-p)}F_{p, n-p}(\alpha)}} = \frac{\sqrt{\lambda_{max}}}{\sqrt{\lambda_{min}}}$$
+```{r include = FALSE}
+
+# "O eixo maior é XX vezes0 maior que o eixo menor."
+
+```
+
+
+---
+
+# Exemplo
+
+```{r iris, include=FALSE}
+#x
+```
+
+---
+# Região de Confiança Simultânea (Método Bonferroni)
+
+- variáveis indepedentes
+
+- Considera-se um intervalo de confiança (univariado) para cada variável
+
+
+---
+# Região de Confiança Simultânea (Método Bonferroni)
+
+- Considerando cada intervalo individualmente
+
+Grau de Confiança Individual
+
+- Considerando os intervalos simultaneamente 
+Grau de Confiança Simultaneo
+
+
+---
+
+A partir de uma região de confiança é obtido o 
+
+---
+# Curiosidades
+
+large sample inference about a population mean vector
+
+X^{2}
+
+Tende a uma qui quadrado com p graus de liberdade e alpha de nível e signficancia
+---
+
+# Referências
+
+---
+
+class: center, middle
+
+# Agradecemos pela atenção!

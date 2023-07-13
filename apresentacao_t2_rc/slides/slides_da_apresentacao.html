@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Teste T-quadrado de Hotteling e Região de Confiança</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Beatriz Lima e Vitória Sesana" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Teste T-quadrado de Hotteling e Região de Confiança
+]
+.author[
+### Beatriz Lima e Vitória Sesana
+]
+.institute[
+### Vitória, UFES
+]
+.date[
+### Julho de 2023
+]
+
+---
+
+
+
+
+
+
+class: inverse, center, middle
+
+# Teste de T-Quadrado de Hotelling
+
+
+---
+
+
+# Teste de T-Quadrado de Hotelling
+
+-	Foi desenvolvido por Harold Hotteling, um estatístico e influente teórico econômico;
+
+--
+
+- É uma alternativa multivariada para o teste T de Student;
+
+--
+
+- Esse teste é utilizado em duas situações:
+
+--
+
+.pull-left[
+- **Uma amostra (One Sample) **: Verifica se um determinado vetor de médias tem valores plausiveis para a média da população de uma amostra multivariada. Possui a seguintes hipóteses:
+
+`$$H_0: \mu = \mu_0$$`
+`$$H_1: \mu \neq \mu_0$$`
+
+]
+
+.pull-right[
+- **Duas amostras (Two Samples)**: Verifica se um determinado vetor tema valores plausiveis para a diferença de médias entre observações multivariadas de duas amostras. Possui a seguintes hipóteses:
+
+`$$H_0: \mu_1 = \mu_2$$`
+  
+`$$H_1: \mu_1 \neq \mu_2$$`
+
+]
+
+
+---
+
+# T-student e T-Quadrado de Hotelling
+
+No contexto de análise univariada, para descobrir se um determinado valor `\(\mu_0\)` é um valor plausivel para a média de uma populaçao `\(\mu\)`, cria-se o seguinte teste de hipótese:
+
+`$$H_0: \mu = \mu_0$$`
+
+`$$H_1: \mu \neq \mu_0$$`
+
+--
+
+
+Sendo `\(X_1, X_2, ..., X_n\)` uma amostra aleatória de uma variável normal, o teste estatistico é:
+
+`$$t = \frac{(\overline{X} - \mu_0)}{s/\sqrt{n}}$$`
+
+--
+
+$$ \overline{X} = \frac{1}{n} \sum_{j=1}^{n} X_j$$
+
+--
+
+$$s^2 = \frac{1}{n-1} \sum_{j=1}^{n} (X_j - \overline{X})^2 $$
+
+---
+
+#T-student e T-Quadrado de Hotelling
+
+Considerando em parametros multivariados, é preciso determinar se um dado vetor p x 1 `\(\mu_0\)` é um valor palusivel para o vetor de médias de uma distribuição normal multivariada. A generalização da tstudent para seu analógo multivariado é:
+
+`$$T^2 =
+(\overline{X} - \mu_0)´ (\frac{1}{n}S)^{-1} (\overline{X} - \mu_0) = n (\overline{X} - \mu_0)´ S^{-1} (\overline{X}-\mu_0)$$`
+
+`$$\overline{X}_{p\times1} = \frac{1}{n} \sum_{j=1}^{n} X_j$$`
+
+`$$S_{p \times p} =\frac{1}{n-1} \sum_{j=1}^{n} (X_j - \overline{X})(X_j - \overline{X})´$$`
+
+`$$\begin{equation}
+\mu_{0_{1\times p}} =  
+  \begin{bmatrix}
+\mu_{10} \\
+\vdots \\
+\mu_{p0}
+\end{bmatrix}
+\end{equation}$$`
+
+---
+
+# Distribuição de Fisher e do T-Quadrado de Hotelling
+
+Se o valor `\(T^2\)` observado é muito grande, então `\(\overline{x}\)` é está muito "afastado" de `\(\mu_0\)` e a hipótese nula é rejeitada. Visto que `\(T^2\)` é distribuida como `\(\frac{(n-1)p}{(n-p)} F_{p,n-p}\)`.
+Sendo `\(F_{p,n-p}\)` uma variável aleatória com distribuição F com p e n-p graus de liberdade. Rejeita-se `\(H_0\)` para nivel de significancia de `\(\alpha\)` se
+
+`$$T^2 = n (\overline{X} - \mu_0)´ S^{-1} (\overline{X}-\mu_0) &gt; \frac{(n-1)p}{(n-p)} F_{p,n-p}(\alpha)$$`
+
+---
+
+#Banco de Dados
+
+
+```r
+knitr::kable(summary(iris), format = 'html')
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt;  Sepal.Length &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt;  Sepal.Width &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt;  Petal.Length &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt;  Petal.Width &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Min.   :4.300 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Min.   :2.000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Min.   :1.000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Min.   :0.100 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1st Qu.:5.100 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1st Qu.:2.800 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1st Qu.:1.600 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1st Qu.:0.300 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Median :5.800 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Median :3.000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Median :4.350 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Median :1.300 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Mean   :5.843 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Mean   :3.057 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Mean   :3.758 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Mean   :1.199 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3rd Qu.:6.400 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3rd Qu.:3.300 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3rd Qu.:5.100 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3rd Qu.:1.800 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Max.   :7.900 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Max.   :4.400 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Max.   :6.900 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Max.   :2.500 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+#Exemplo no R: Teste T-student
+
+
+```r
+t.test(iris$Sepal.Length, mu= 6)
+```
+
+```
+## 
+## 	One Sample t-test
+## 
+## data:  iris$Sepal.Length
+## t = -2.3172, df = 149, p-value = 0.02186
+## alternative hypothesis: true mean is not equal to 6
+## 95 percent confidence interval:
+##  5.709732 5.976934
+## sample estimates:
+## mean of x 
+##  5.843333
+```
+
+---
+
+#Exemplo no R: Teste T-student
+
+```r
+t.test(iris$Sepal.Width, mu= 3)
+```
+
+```
+## 
+## 	One Sample t-test
+## 
+## data:  iris$Sepal.Width
+## t = 1.611, df = 149, p-value = 0.1093
+## alternative hypothesis: true mean is not equal to 3
+## 95 percent confidence interval:
+##  2.987010 3.127656
+## sample estimates:
+## mean of x 
+##  3.057333
+```
+
+---
+
+#Exemplo no R: Teste T-student
+
+```r
+t.test(iris$Petal.Length, mu = 4)
+```
+
+```
+## 
+## 	One Sample t-test
+## 
+## data:  iris$Petal.Length
+## t = -1.679, df = 149, p-value = 0.09525
+## alternative hypothesis: true mean is not equal to 4
+## 95 percent confidence interval:
+##  3.473185 4.042815
+## sample estimates:
+## mean of x 
+##     3.758
+```
+
+---
+
+#Exemplo no R: Teste T-student
+
+
+```r
+t.test(iris$Petal.Width, mu = 1)
+```
+
+```
+## 
+## 	One Sample t-test
+## 
+## data:  iris$Petal.Width
+## t = 3.2028, df = 149, p-value = 0.001664
+## alternative hypothesis: true mean is not equal to 1
+## 95 percent confidence interval:
+##  1.076353 1.322313
+## sample estimates:
+## mean of x 
+##  1.199333
+```
+
+---
+
+#Exemplo no R: Teste T-quadrado de Hotteling
+
+
+```r
+n &lt;- nrow(iris)
+p &lt;- ncol(iris)
+
+vetor_medias &lt;- colMeans(iris)
+matriz_cov &lt;- cov(iris)
+matriz_inv_cov &lt;- solve(matriz_cov)
+
+medias_0 &lt;- c(5,3,4,1)
+
+T_2 &lt;- n*t(vetor_medias - medias_0)%*%
+        matriz_inv_cov%*%
+        (vetor_medias - medias_0)
+
+alpha &lt;- 0.01
+valorF &lt;- qf(p = alpha,df1 = p,df2 = n-p, lower.tail = FALSE)
+
+VC &lt;- (((n-1)*p)/(n-p))*valorF
+```
+
+---
+
+#Resultados
+
+Vetor de médias:
+
+
+|       | Sepal.Length| Sepal.Width| Petal.Length| Petal.Width|
+|:------|------------:|-----------:|------------:|-----------:|
+|Médias |     5.843333|    3.057333|        3.758|    1.199333|
+
+Matriz de Covariância:
+
+
+|             | Sepal.Length| Sepal.Width| Petal.Length| Petal.Width|
+|:------------|------------:|-----------:|------------:|-----------:|
+|Sepal.Length |    0.6856935|  -0.0424340|    1.2743154|   0.5162707|
+|Sepal.Width  |   -0.0424340|   0.1899794|   -0.3296564|  -0.1216394|
+|Petal.Length |    1.2743154|  -0.3296564|    3.1162779|   1.2956094|
+|Petal.Width  |    0.5162707|  -0.1216394|    1.2956094|   0.5810063|
+
+---
+
+#Resultados
+
+Matriz Inversa da Covariância:
+
+
+|             | Sepal.Length| Sepal.Width| Petal.Length| Petal.Width|
+|:------------|------------:|-----------:|------------:|-----------:|
+|Sepal.Length |    10.314699|   -6.713189|    -7.314483|    5.739951|
+|Sepal.Width  |    -6.713189|   11.058417|     6.480589|   -6.170932|
+|Petal.Length |    -7.314483|    6.480589|    10.031679|  -14.513766|
+|Petal.Width  |     5.739951|   -6.170932|   -14.513766|   27.693635|
+
+Testando o vetor de médias `\(\mu_0 = [5,3,4,1]\)`. Dado n = 150 e p = 4, o valor critico de F para o teste é 3.45 e o `\(T^2\)` é igual a 2160.86. Assim, rejeita-se `\(H_0\)` com nível de significancia de 1%.
+
+---
+
+#Exemplo no R: Uma Amostra
+
+
+```r
+library(DescTools)
+```
+
+```
+## Warning: package 'DescTools' was built under R version 4.2.3
+```
+
+```r
+HotellingsT2Test(iris, mu = medias_0, test = "chi")
+```
+
+```
+## 
+## 	Hotelling's one sample T2-test
+## 
+## data:  iris
+## T.2 = 2160.9, df = 4, p-value &lt; 2.2e-16
+## alternative hypothesis: true location is not equal to c(5,3,4,1)
+```
+
+---
+
+#Exemplo no R: Duas amostras
+
+
+Selecionando as observações da especies Setosa e Versicolor
+
+
+```r
+setosa &lt;- iris[iris$Species == "setosa",]
+setosa &lt;- setosa[,-5]
+knitr::kable(summary(setosa), format = 'html')
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt;  Sepal.Length &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt;  Sepal.Width &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt;  Petal.Length &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt;  Petal.Width &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Min.   :4.300 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Min.   :2.300 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Min.   :1.000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Min.   :0.100 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1st Qu.:4.800 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1st Qu.:3.200 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1st Qu.:1.400 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1st Qu.:0.200 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Median :5.000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Median :3.400 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Median :1.500 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Median :0.200 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Mean   :5.006 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Mean   :3.428 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Mean   :1.462 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Mean   :0.246 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3rd Qu.:5.200 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3rd Qu.:3.675 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3rd Qu.:1.575 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3rd Qu.:0.300 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Max.   :5.800 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Max.   :4.400 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Max.   :1.900 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Max.   :0.600 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+#Exemplo no R: Duas amostras
+
+Selecionando as observações da especies Setosa e Versicolor
+
+
+```r
+versicolor &lt;- iris[iris$Species == "versicolor",]
+versicolor &lt;- versicolor[,-5]
+knitr::kable(summary(versicolor), format = 'html')
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt;  Sepal.Length &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt;  Sepal.Width &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt;  Petal.Length &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt;  Petal.Width &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Min.   :4.900 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Min.   :2.000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Min.   :3.00 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Min.   :1.000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1st Qu.:5.600 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1st Qu.:2.525 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1st Qu.:4.00 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1st Qu.:1.200 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Median :5.900 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Median :2.800 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Median :4.35 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Median :1.300 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Mean   :5.936 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Mean   :2.770 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Mean   :4.26 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Mean   :1.326 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3rd Qu.:6.300 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3rd Qu.:3.000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3rd Qu.:4.60 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3rd Qu.:1.500 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Max.   :7.000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Max.   :3.400 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Max.   :5.10 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Max.   :1.800 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+#Exemplo no R: Duas amostras
+
+Testando o vetor `\(\mu = [0.9,-0.65,2.8,1]\)` para diferença de médias.
+
+
+```r
+mu &lt;- c(0.9, -0.65, 2.8, 1)
+
+HotellingsT2Test(x=versicolor,y=setosa, mu=mu, test = "chi")
+```
+
+```
+## 
+## 	Hotelling's two sample T2-test
+## 
+## data:  versicolor and setosa
+## T.2 = 15.445, df = 4, p-value = 0.003861
+## alternative hypothesis: true location difference is not equal to c(0.9,-0.65,2.8,1)
+```
+
+---
+
+class: inverse, center, middle
+
+# Região de Confiança para a Média
+
+---
+## Intervalo de Confiança 
+
+- Caso univariado de tamanho `\(n\)`;
+- Para `\(\mu\)` e `\(\sigma\)` desconhecidos: teste t-student.
+
+
+`$$P \Bigg[ \Bigg| \frac{\bar{X}- \mu}{ S / \sqrt{n}} \Bigg| \leq t_{n-1} (\alpha) \Bigg] = 1 - \alpha$$`
+
+`$$P \Bigg[ \bar{X} - t_{n-1} (\alpha) \frac{S}{ \sqrt{n}}&lt; \mu &lt; \bar{X} - t_{n-1} (\alpha) \frac{S}{ \sqrt{n}} \Bigg] = 1 - \alpha$$`
+
+Portanto, o intervalo para `\(\mu\)` com 100(1- `\(\alpha\)`)% de confiança é:
+
+`$$IC = \bigg[ \bar{X} - t_{n-1} (\alpha) \frac{S}{ \sqrt{n}}; \bar{X} + t_{n-1} (\alpha) \frac{S}{ \sqrt{n}} \bigg]$$`
+- Com `\(\bar{X}\)` sendo a média amostral e `\(S^{2}\)` a variância amostral.
+
+---
+
+## Região de Confiança 
+
+- Caso Multivariado de tamanho `\(n\)` e com `\(p\)` variáveis;
+- Teste de Hotteling.
+
+`$$P\bigg[ R(X) \text{ cobrir o real valor de } \underset{\sim}{\mu} \bigg] = 1 - \alpha$$`
+
+`$$P\bigg[n (\bar{X}-\mu)'S^{-1}(\bar{X}-\mu) \leq \frac{(n-1)p}{(n-p)}F_{p, n-p}(\alpha)\bigg] = 1 - \alpha$$`
+--
+
+Como construir a região de confiança `\(R(X)\)` com 100(1- `\(\alpha\)`)% de confiança? 
+
+--
+
+Calculando os eixos e seus tamanhos relativos de uma elipsoide (centrada em `\(\bar{X}\)`) a partir dos autovalores e autovetores da matriz de covariância `\(S\)`! 
+
+`$$S e_{i} = \lambda_{i} e_{i}$$`
+- Com `\(\lambda_{i}\)` sendo os autovalores e `\(e_{i}\)` os autovetores.
+
+---
+
+## Construindo a Região de Confiança
+
+- Direção e metade dos tamanhos dos eixos do elipsoide de confiança:
+
+`$$\sqrt{\lambda_{i}} \sqrt{ \frac{p(n-1)}{n(n-p)}F_{p,n-p}(\alpha)} e_i$$`
+--
+
+- Vértices da elipsoide de confiança:
+
+$$ \bar{X} \pm \sqrt{\lambda i} \sqrt{ \frac{p(n-1)}{n(n-p)}F_{p,n-p}(\alpha)} e_i$$
+--
+
+- Indicador de alogamento da elipsoide de confiança:
+
+`$$\frac{n\sqrt{\lambda_{max}} \sqrt{\frac{p(n-1)}{n(n-p)}F_{p, n-p}(\alpha)}}{n\sqrt{\lambda_{min}} \sqrt{\frac{p(n-1)}{n(n-p)}F_{p, n-p}(\alpha)}} = \frac{\sqrt{\lambda_{max}}}{\sqrt{\lambda_{min}}}$$`
+
+---
+
+## Região de Confiança Simultânea 
+
+- Outro método para obter uma região de confiança;
+
+- Para p variáveis indepedentes, considera-se um intervalo de confiança para cada variável.
+
+- Intervalos simultâneos ou intervalos `\(T^2\)`.
+
+`$$IC_{i} = \bigg[ \bar{x}_{i} - \sqrt{ \frac{p(n-1)}{(n-p)}F_{p,n-p}(\alpha)} \sqrt{\frac{s_{ii}}{ n}}; 
+\bar{x}_{i} + \sqrt{ \frac{p(n-1)}{(n-p)}F_{p,n-p}(\alpha)} \sqrt{\frac{s_{ii}}{ n}};
+\bigg]$$`
+
+A Região de Confiança será a região que atende aos intervalos de cada variável simultâneamente!
+
+--
+
+O nível de confiança para cada intervalo será de `\(100(1-\alpha)\)`%, mas simultaneamente será `\(100(1-\alpha)^{p}\)`.
+
+Isso ocorre já que há `\(p\)` intervalos de confiança individuais.
+
+`$$P\bigg[\text{ Todos os IC's cobrirem o real valor de } \underset{\sim}{\mu} \bigg] = (1 - \alpha) \dots (1 - \alpha) = (1 - \alpha)^p$$`
+
+---
+
+## Região de Confiança Simultânea (Método Bonferroni)
+
+- Intervalos simultâneos mais precisos (menores) que os intervalos `\(T^{2}\)`.
+
+- Desigualdade Bonferroni 
+
+`$$P[\text{ Todos os IC's cobrirem o real valor de } \underset{\sim}{\mu} ] = 1 - P[\text{Pelo menos um IC é falso} ]$$`
+
+`$$P[\text{ Todos os IC's serem verdadeiros} ] = 1 - \sum_{i=n}^{m} P[\text{IC}_{i} \text{ ser falso}]$$`
+
+`$$P[\text{ Todos os IC's serem verdadeiros}] = 1 - \sum_{i=n}^{m} (1- P[\text{IC}_{i} \text{ ser verdadeiro}])$$`
+
+`$$P[\text{Todos os IC's serem verdadeiros} ] = 1 - (\alpha_{1} +\cdots + \alpha_{m})$$`
+---
+
+## Região de Confiança Simultânea (Método Bonferroni)
+
+Desse modo, `\(\alpha_{i} = \alpha/m\)`
+`$$P \bigg[ \bar{x}_{i} \pm t_{n-1}\bigg(\frac{\alpha}{2m}\bigg) \sqrt{\frac{s_{ii}}{ n}} \bigg]= 1- \alpha/m$$`
+Os intervalos de confiança individuais utilizando o método bonferroni são:
+
+`$$IC_{i} = \bigg[ \bar{x}_{i} - t_{n-1}\bigg(\frac{\alpha}{2m}\bigg) \sqrt{\frac{s_{ii}}{ n}}; 
+\bar{x}_{i} + t_{n-1}\bigg(\frac{\alpha}{2m}\bigg) \sqrt{\frac{s_{ii}}{ n}}
+\bigg]$$`
+
+---
+
+## Exemplo no R 
+
+- Base 'iris', colunas: 'Sepal.Length' e 'Sepal.Width';
+
+
+```r
+base_bivariada &lt;- iris %&gt;% 
+  select(Sepal.Length, Sepal.Width)
+
+n &lt;- nrow(base_bivariada)
+p &lt;- ncol(base_bivariada)
+
+vetor_medias &lt;- colMeans(base_bivariada)
+matriz_cov &lt;- cov(base_bivariada)
+matriz_inv_cov &lt;- solve(matriz_cov)
+
+alpha &lt;- 0.01
+valorF &lt;- qf(1-alpha, p, n - p)
+
+autovalores &lt;- eigen(matriz_cov)$values
+autovetores &lt;- eigen(matriz_cov)$vectors 
+```
+
+---
+
+## Resultados
+
+Vetor Médias:
+
+
+|       | Sepal.Length| Sepal.Width|
+|:------|------------:|-----------:|
+|Médias |     5.843333|    3.057333|
+
+Matriz de Variâncias e Covariâncias:
+
+
+|             | Sepal.Length| Sepal.Width|
+|:------------|------------:|-----------:|
+|Sepal.Length |    0.6856935|  -0.0424340|
+|Sepal.Width  |   -0.0424340|   0.1899794|
+
+---
+
+## Resultados
+
+Autovalores:
+
+
+| Autovalor 1| Autovalor 2|
+|-----------:|-----------:|
+|   0.6892997|   0.1863732|
+
+Autovetores:
+
+
+| Autovetor 1| Autovetor 2|
+|-----------:|-----------:|
+|  -0.9964083|  -0.0846783|
+|   0.0846783|  -0.9964083|
+
+Dado n = 150, p = 2 o valor crítico de F para o teste de hotteling é 4.75 com 1% de nível de significância.
+
+---
+
+## Calculando os eixos da elipse e seus tamanhos
+
+
+```r
+eixos_tamanhos &lt;- c()
+eixos &lt;- c()
+
+for (i in 1:p) {
+  tamanho &lt;- sqrt(autovalores[i]) * 
+    sqrt( ( p * (n - 1) / (n * (n - p)) ) * 
+            valorF) 
+  
+  eixos_valores &lt;- tamanho * autovetores[,i]
+  eixos_tamanhos &lt;- cbind(eixos_tamanhos, tamanho)
+  eixos &lt;- cbind(eixos, eixos_valores)
+}
+```
+
+
+.pull-left[
+
+Metade dos tamanhos dos eixos:
+
+
+| Tamanho 1| Tamanho 2|
+|---------:|---------:|
+| 0.2096768|  0.109028|
+]
+
+
+.pull-right[
+
+Eixos:
+
+
+|     Eixo 1|     Eixo 2|
+|----------:|----------:|
+| -0.2089237| -0.0092323|
+|  0.0177551| -0.1086364|
+
+]
+
+---
+
+## Calculando os vértices da elipse 
+
+
+```r
+vertices &lt;- c()
+
+for (i in 1:p) {
+  vertice_inf &lt;- vetor_medias - eixos[,i]
+  vertice_sup &lt;- vetor_medias + eixos[,i]
+  vertices &lt;- rbind(vertices, vertice_inf, vertice_sup)
+}
+
+colnames(vertices) &lt;- colnames(base_bivariada)
+```
+
+Vértices da elipse:
+
+
+| Sepal.Length| Sepal.Width|
+|------------:|-----------:|
+|     6.052257|    3.039578|
+|     5.634410|    3.075088|
+|     5.852566|    3.165970|
+|     5.834101|    2.948697|
+
+---
+
+## Indicador de Achatamento da Região de Confiança 
+
+Razão entre os tamanhos dos eixos
+
+
+```r
+razao_tamanho_eixos &lt;- 
+  sqrt(max(autovalores)) / sqrt(min(autovalores))
+```
+
+O tamanho do maior eixo é 1.9 vezes o tamanho do menor eixo.
+
+
+---
+
+## Plotando a Região de Confiança (Código)
+
+
+```r
+library(MVQuickGraphs)
+
+confidenceEllipse(X.mean = vetor_medias,
+                  eig = eigen(matriz_cov),
+                  n = n, 
+                  p = p,
+                  alpha = alpha, 
+                  xl = c(min(base_bivariada$Sepal.Length),
+                         max(base_bivariada$Sepal.Length)),
+                  yl = c(min(base_bivariada$Sepal.Width),
+                         max(base_bivariada$Sepal.Width)))
+
+points(base_bivariada,
+       pch = 20, col = "gray")
+
+points(vetor_medias[1], 
+       vetor_medias[2],
+       pch = 18, col = "red")
+
+points(vertices[,1], 
+       vertices[,2], 
+       pch = 18, col = "blue")
+```
+
+---
+
+## Plotando a Região de Confiança  (GRÁFICO)
+
+&lt;img src="slides_da_apresentacao_files/figure-html/Gráfico RG-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Plotando a Região de Confiança (GRÁFICO AMPLIADO)
+
+&lt;img src="slides_da_apresentacao_files/figure-html/Gráfico RG 2-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Calculando Intervalos Simultâneos (Teste de Hotteling)
+
+
+```r
+intervalos &lt;- c()
+for (i in 1:p) {
+  estatistica &lt;- 
+    sqrt( ((p * (n-1)) / (n-p)) * valorF) * 
+    sqrt(matriz_cov[i,i]/n)
+  lim_inf &lt;- vetor_medias[i]-estatistica
+  lim_sup &lt;- vetor_medias[i]+estatistica
+  limites &lt;- c(lim_inf,lim_sup )
+  intervalos &lt;- rbind(intervalos,limites)
+}
+
+rownames(intervalos) &lt;- rownames(matriz_cov)
+colnames(intervalos) &lt;- c("Limite Inferior", 
+                          "Limite Superior")
+```
+
+
+|             | Limite Inferior| Limite Superior|
+|:------------|---------------:|---------------:|
+|Sepal.Length |        5.634206|        6.052461|
+|Sepal.Width  |        2.947256|        3.167411|
+
+---
+
+## Calculando Intervalos Simultâneos (Bonferroni)
+
+
+```r
+m &lt;- p
+valorT &lt;- qt(1 - (alpha/(2*m)), df = n-1)
+
+intervalos_bonferroni &lt;- c()
+for (i in 1:p) {
+  estatistica &lt;- valorT * sqrt(matriz_cov[i,i]/n)
+  lim_inf &lt;- vetor_medias[i] - estatistica
+  lim_sup &lt;- vetor_medias[i] + estatistica
+  limites &lt;- c(lim_inf, lim_sup)
+  intervalos_bonferroni &lt;- rbind(intervalos_bonferroni,limites)
+}
+
+rownames(intervalos_bonferroni) &lt;- rownames(matriz_cov)
+colnames(intervalos_bonferroni) &lt;- c("Limite Inferior", 
+                                     "Limite Superior")
+```
+
+
+|             | Limite Inferior| Limite Superior|
+|:------------|---------------:|---------------:|
+|Sepal.Length |        5.650679|        6.035988|
+|Sepal.Width  |        2.955926|        3.158740|
+
+---
+
+## Plotando os Intervalos Simultâneos (Códigos)
+
+
+```r
+confidenceEllipse(X.mean = vetor_medias,
+                  eig = eigen(matriz_cov),
+                  n = n, 
+                  p = p,
+                  alpha = alpha)
+title("Intervalos de Confiança Simultâneos com 99% de Confiança",
+      xlab = "Sepal Lenght",
+      ylab = "Sepal Width")
+
+abline(v = intervalos[1,], 
+       h = intervalos[2,], 
+       lwd=1, lty=3, col = "blue")
+
+abline(v = intervalos_bonferroni[1,], 
+       h = intervalos_bonferroni[2,], 
+       lwd=1, lty=3, col = "red")
+
+legend("bottomright", 
+       legend = c("Teste de Hotteling", "Bonferroni"),
+       lwd = c(1,1), lty=3, col = c("blue", "red"))
+```
+
+---
+
+## Plotando os Intervalos Simultâneos (Graficamente)
+
+- Com 98.01% de confiança para `\(\alpha = 1\)`%.
+
+&lt;img src="slides_da_apresentacao_files/figure-html/unnamed-chunk-30-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center, middle
+
+# Agradecemos pela atenção!
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
