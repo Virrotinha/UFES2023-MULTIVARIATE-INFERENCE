@@ -1,4 +1,4 @@
-# Hotteling test and Confidence Region
+# Hotelling test and Confidence Region
 
 > By Beatriz Lima and Vitória Sesana, two statistics students at Universidade Federal do Espírito Santo.
 
